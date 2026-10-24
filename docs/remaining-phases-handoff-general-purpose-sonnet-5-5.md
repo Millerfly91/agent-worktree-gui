@@ -16,9 +16,10 @@ phase on Opus 5.5. Do one phase per run, not all five in one context.
 - **Repo and PRs.** Work in `Millerfly91/agent-worktree-gui` (`origin`; `upstream` is `JLRoper/…`). One branch and one PR
   per phase, opened against the fork's `main`. Do not merge your own PR. Before branching, `git fetch origin` and
   merge `origin/main`; if the previous phase is unmerged, stack on its branch and say so in the PR.
-- **Version.** Each PR bumps the *third* number of `package.json` (0.2.x) — see the table below — and
-  `node tools/verify-version-bump.mjs --base origin/main` must pass before you push. The close-out PR is the only one
-  that moves the minor number.
+- **Version — only code bumps it.** Code is `server.js`, `lib/` and `public/`: a PR that changes any of them bumps the
+  *third* number of `package.json` (0.2.x, see the table below). A PR that only touches `docs/`, `tools/`, a README or
+  another handoff does **not** bump — the version stays as it is. `node tools/verify-version-bump.mjs --base origin/main`
+  enforces both directions and must pass before you push. The close-out PR is the only one that moves the minor number.
 - **`config.json` is local.** In this clone it points `scanRoots` at `Documents/Projects`. Never commit it:
   `git stash push config.json` around branch switches and rebases, and `git add` files by name, never `-A`.
 - **Checks before every push:** `node --check` on every file you touched, plus the existing `tools/verify-*.mjs` that
@@ -35,17 +36,17 @@ phase on Opus 5.5. Do one phase per run, not all five in one context.
 
 | phase | what | branch | version | status |
 |---|---|---|---|---|
-| 2a | spike, handoff, version check | `claude-phase2-handoff` (PR #2) | 0.2.1 | done |
-| — | this handoff | `remainingPhases` | 0.2.2 | this PR |
-| 2b | transport split, no behaviour change | `claude-2b-transport-split` | 0.2.3 | todo |
-| 2c | Claude spawn, stream, stop | `claude-2c-spawn` | 0.2.4 | todo |
-| 2d | reply (resume) and steer | `claude-2d-reply-steer` | 0.2.5 | todo |
-| 2e | approvals | `claude-2e-approvals` | 0.2.6 | todo |
-| 2f | dedup, UI picker, docs, verify script | `claude-2f-ui-dedup` | 0.2.7 | todo |
+| 2a | spike, handoff, version check (docs and tools only) | `claude-phase2-handoff` (PR #2) | 0.2.0 (no bump) | done |
+| — | this handoff (docs only) | `remainingPhases` (PR #3) | 0.2.0 (no bump) | this PR |
+| 2b | transport split, no behaviour change | `claude-2b-transport-split` | 0.2.1 | todo |
+| 2c | Claude spawn, stream, stop | `claude-2c-spawn` | 0.2.2 | todo |
+| 2d | reply (resume) and steer | `claude-2d-reply-steer` | 0.2.3 | todo |
+| 2e | approvals | `claude-2e-approvals` | 0.2.4 | todo |
+| 2f | dedup, UI picker, docs, verify script | `claude-2f-ui-dedup` | 0.2.5 | todo |
 | close | `Status: complete`, minor bump | `claude-complete` | 0.3.0 | todo |
 
-If a phase splits, the extra PR takes the next patch number and the later ones shift; the rule is the contract, the
-table is a forecast.
+If a phase splits and both halves change code, the second takes the next patch number and the later ones shift; the
+rule is the contract, the table is a forecast.
 
 ## Phase 2b — transport split (no behaviour change)
 
