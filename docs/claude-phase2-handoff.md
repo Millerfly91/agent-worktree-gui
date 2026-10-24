@@ -72,14 +72,17 @@ Things that will bite:
 | milestone | what | version |
 |---|---|---|
 | 2a | spike + this handoff + the version check | 0.2.1 |
-| 2b | transport split, no behaviour change (verify with a real Hermes run) | 0.2.2 |
-| 2c | Claude spawn, stream, stop | 0.2.3 |
-| 2d | reply (resume) and steer | 0.2.4 |
-| 2e | approvals | 0.2.5 |
-| 2f | dedup, UI picker, docs, `tools/verify-claude-transport.mjs` | 0.2.6 |
+| 2b | transport split, no behaviour change (verify with a real Hermes run) | 0.2.3 |
+| 2c | Claude spawn, stream, stop | 0.2.4 |
+| 2d | reply (resume) and steer | 0.2.5 |
+| 2e | approvals | 0.2.6 |
+| 2f | dedup, UI picker, docs, `tools/verify-claude-transport.mjs` | 0.2.7 |
 | done | `Status: complete` | 0.3.0 |
 
 If a milestone splits, it takes the next patch number; the table is a forecast, the rule is the contract.
+
+The step-by-step plan for 2b onward, with the authoritative version table, is in
+`docs/remaining-phases-handoff-general-purpose-sonnet-5-5.md` (`remainingPhases` took 0.2.2, so 2b is 0.2.3).
 
 ## Open decisions
 
