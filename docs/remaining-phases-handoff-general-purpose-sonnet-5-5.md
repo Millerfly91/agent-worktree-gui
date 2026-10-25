@@ -38,17 +38,22 @@ phase on Opus 5.5. Do one phase per run, not all five in one context.
 |---|---|---|---|---|
 | 2a | spike, handoff, version check (docs and tools only) | `claude-phase2-handoff` (PR #2) | 0.2.0 (no bump) | done |
 | — | this handoff (docs only) | `remainingPhases` (PR #3) | 0.2.0 (no bump) | this PR |
-| 2b | transport split, no behaviour change | `claude-2b-transport-split` | 0.2.1 | todo |
-| 2c | Claude spawn, stream, stop | `claude-2c-spawn` | 0.2.2 | todo |
-| 2d | reply (resume) and steer | `claude-2d-reply-steer` | 0.2.3 | todo |
-| 2e | approvals | `claude-2e-approvals` | 0.2.4 | todo |
-| 2f | dedup, UI picker, docs, verify script | `claude-2f-ui-dedup` | 0.2.5 | todo |
+| 2b | transport split, no behaviour change | `claude-2b-transport-split` (landed in 097d5aa) | 0.2.2 | done |
+| 2b follow-up | `job.agent`, agent-keyed transport map, `info()` | `claude-2b-followup-agent-field` (PR #6) | 0.2.3 | this PR's follow-up, in review |
+| 2c | Claude spawn, stream, stop | `claude-2c-spawn` | 0.2.4 | todo |
+| 2d | reply (resume) and steer | `claude-2d-reply-steer` | 0.2.5 | todo |
+| 2e | approvals | `claude-2e-approvals` | 0.2.6 | todo |
+| 2f | dedup, UI picker, docs, verify script | `claude-2f-ui-dedup` | 0.2.7 | todo |
 | close | `Status: complete`, minor bump | `claude-complete` | 0.3.0 | todo |
+
+The version column was renumbered after 2b landed at 0.2.2 instead of the 0.2.1 planned here. Every phase from 2c on moved up one patch number. The close-out is unchanged at 0.3.0. Per-item 2b verdicts: `docs/2b-conformance-and-plan-update.md` (in PR #6).
 
 If a phase splits and both halves change code, the second takes the next patch number and the later ones shift; the
 rule is the contract, the table is a forecast.
 
 ## Phase 2b — transport split (no behaviour change)
+
+> **Status: landed.** 2b shipped in 097d5aa at v0.2.2, not 0.2.1. Its layout differs from the "Do" list below: the base class is `lib/transport.js` and the Hermes implementation is `lib/hermes-transport.js` (not `lib/transports/hermes.js`). Its method names are `createRun` (start), `poll` (status) and `clarify` (answer), and it has no `status` method. The follow-up in PR #6 (v0.2.3) adds the `job.agent` field, the agent-keyed `this.transports` map, `transportFor(job)`, and `HermesTransport.info()`. Those items are now in place. The names above are kept as they are, so Phase 2c must follow the names that exist, not the ones in this list.
 
 **Goal.** Put the Hermes HTTP calls behind an interface so a second transport can sit beside it. Nothing a user can see
 changes.
@@ -71,11 +76,13 @@ changes.
    them (`server.js` ~15 sites, `assistant.js` only `create`/`stop`/`answerQuestion`). Prefer delegating getters over
    editing those callers.
 
-**Done when.** `node --check` clean; `verify-verdicts` and `verify-assistant` pass as before; a real Hermes test agent
+**Done when.** (Verified for 2b in `docs/2b-conformance-and-plan-update.md`.) `node --check` clean; `verify-verdicts` and `verify-assistant` pass as before; a real Hermes test agent
 (`PONG`) spawns, streams and finishes, and a second one can be steered and stopped; the diff for `consume`, `settle`
 and the UI is empty.
 
 ## Phase 2c — Claude spawn, stream, stop
+
+> **Prerequisite: the 2b follow-up (PR #6, v0.2.3) must be merged first.** It provides `job.agent`, `this.transports`, and `transportFor(job)`. In 2c, create Claude jobs with `agent: "claude"`, register a `claude` transport in `this.transports`, and route every per-job call through `transportFor(j)`. Do not add any new per-job `this.hermes.*` calls. Give the Claude transport the methods that already exist: `create`, `follow`, `poll`, `steer`, `approve`, `clarify`, `stop`, `info`. Do not add `start`/`status`/`answer` names.
 
 **Goal.** A Claude job that runs, streams into the existing card, and can be stopped.
 
