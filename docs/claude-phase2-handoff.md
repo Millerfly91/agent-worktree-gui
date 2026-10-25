@@ -86,6 +86,9 @@ Things that will bite:
 If a milestone splits and both halves change code, the second takes the next patch number; the table is a
 forecast, the rule is the contract.
 
+The step-by-step plan for 2b onward, with the authoritative version table, is in
+`docs/remaining-phases-handoff-general-purpose-sonnet-5-5.md`.
+
 ## Open decisions
 
 1. Scope: all of 2b–2f, or stop after 2d and defer approvals?
