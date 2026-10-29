@@ -12,7 +12,8 @@
   "hideOlderThanDays": 7,
   "threads": 5,
   "scanRoots": [
-    "C:/ProjectDevelopment"
+    "C:\\Users\\admin\\Projects\\agent-worktree-gui",
+    "C:\\Users\\admin\\Projects"
   ],
   "liveSeconds": 5,
   "discovery": {
